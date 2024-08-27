@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="container">
+        <img src="images.png" alt="Imagen descriptiva" class="img-responsive">
+        <h1>GET Request</h1>
+        <form action="/hello" class="form-style">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" value="Write your name"><br><br>
+            <input type="button" value="Submit" onclick="loadGetMsg()" class="btn">
+        </form> 
+        <div id="getrespmsg" class="response-box"></div>
+
+        <h1>POST Request</h1>
+        <form action="/echo" class="form-style">
+            <label for="postname">Name:</label><br>
+            <input type="text" id="postname" name="name" value="Write your name"><br><br>
+            <input type="button" value="Submit" onclick="loadPostMsg(postname)" class="btn">
+        </form>
+        <div id="postrespmsg" class="response-box"></div>
+    </div>
+
+    <script>
+        function loadGetMsg() {
+            let nameVar = document.getElementById("name").value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                document.getElementById("getrespmsg").innerHTML = this.responseText;
+            }
+            xhttp.open("GET", "/app/hello?name=" + nameVar);
+            xhttp.send();
+        }
+
+        function loadPostMsg() {
+            let nameVar = document.getElementById("postname").value;
+            let url = "/app/echo";
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: nameVar })
+            })
+            .then(x => x.text())
+            .then(y => document.getElementById("postrespmsg").innerHTML = y);
+        }
+    </script>
+</body>
+</html>
